@@ -97,7 +97,17 @@ class ApiFoodController extends Controller
             return ["error"=>$e->getMessage(), "status"=>"fail"];
         }
     }
-    public function seerch($name = null, $priceFrom = null, $priceTo = null) {
-
+    public function search(Request $request) {
+        $results = Food::select("*");
+        if (!empty($request->name)) {
+            $results = $results->where("name", "like", "%{$request->name}%");
+        }
+        if (!empty($request->priceFrom)) {
+            $results = $results->where("price", ">=", $request->priceFrom);
+        }
+        if (!empty($request->priceTo)) {
+            $results = $results->where("price", "<=", $request->priceTo);
+        }
+        return ["results" => $results->get(), "count" => count($results->get())];
     }
 }

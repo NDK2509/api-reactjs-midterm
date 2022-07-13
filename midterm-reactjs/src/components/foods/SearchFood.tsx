@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
-import { API_URL, FOODS_TABLE_NAME } from "../../utils/constants";
+import { API_URL, FOODS_TABLE_NAME, SEARCH } from "../../utils/constants";
 import { Food } from "../../utils/types";
 
 const SearchFood = () => {
@@ -11,37 +11,28 @@ const SearchFood = () => {
     priceFrom: searchParams.get("priceFrom"),
     priceTo: searchParams.get("priceTo"),
   };
-  const [foodList, setFoodList] = useState<Food[] | []>([]);
-  const getFoodList = async () => {
-    const res = await axios.get(API_URL + FOODS_TABLE_NAME);
-    setFoodList(res.data.data);
-  };
+  const [data, setData] = useState<{results: Food[] | [], count: 0}>({
+    results: [],
+    count: 0
+  });
+  
   useEffect(() => {
-    getFoodList();
-  }, []);
-  const filteredFoodList = 
-            foodList
-            .filter((food) =>
-              searchKeys.name
-                ? food.name
-                    .toLocaleLowerCase()
-                    .includes(searchKeys.name.toLocaleLowerCase())
-                : true
-            )
-            .filter((food) =>
-              searchKeys.priceFrom
-                ? food.price >= Number(searchKeys.priceFrom)
-                : true
-            )
-            .filter((food) =>
-              searchKeys.priceTo
-                ? food.price <= Number(searchKeys.priceTo)
-                : true
-            )
-            
+    const getResults = async () => {
+      const res = await axios.get(
+        API_URL +
+          FOODS_TABLE_NAME +
+          SEARCH +
+          `?name=${searchKeys.name}&priceFrom=${searchKeys.priceFrom}&priceTo=${searchKeys.priceTo}`
+      );
+      setData({ count: res.data.count, results: res.data.results });
+    };
+    getResults();
+  }, [searchKeys.name, searchKeys.priceFrom, searchKeys.priceTo]);       
+  console.log(data);
+     
   return (
     <>
-      <div className="text-start my-3">
+      <div className="text-startfilteredFoodList.length my-3">
         <Link to="/Foods">
           <i className="fa fa-arrow-left" aria-hidden="true"></i>
         </Link>
@@ -51,16 +42,16 @@ const SearchFood = () => {
           <tr>
             <th scope="col">Id</th>
             <th scope="col">Name</th>
-            <th scope="col">Price</th>
+            <th scope="col">Price (đ)</th>
             <th scope="col">Image</th>
             <th scope="col">Description</th>
             <th scope="col">Ingedients</th>
           </tr>
         </thead>
         <tbody>
-          {filteredFoodList.length ? (
-            filteredFoodList.map((food) => (
-              <tr>
+          {data.count ? (
+            data.results.map((food, index) => (
+              <tr key={index}>
                 <td>{food.id}</td>
                 <td>{food.name}</td>
                 <td>{food.price}</td>

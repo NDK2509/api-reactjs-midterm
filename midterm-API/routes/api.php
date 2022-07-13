@@ -20,12 +20,12 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 Route::prefix("/foods")->group(function(){
+    Route::get("/search", [ApiFoodController::class, "search"]);
     Route::get("", [ApiFoodController::class,"all"]);
     Route::get("/{id}", [ApiFoodController::class,"get"]);
     Route::post("", [ApiFoodController::class, "create"]);
     Route::put("/{id}", [ApiFoodController::class, "update"]);
     Route::delete("/{id}", [ApiFoodController::class, "delete"]);
-    Route::get("search", [ApiFoodController::class, "search"]);
 });
 Route::prefix("/categories")->group(function(){
     Route::get("", [ApiCategoryController::class,"all"]);

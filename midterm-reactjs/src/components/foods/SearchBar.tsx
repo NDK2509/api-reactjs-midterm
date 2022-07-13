@@ -19,7 +19,7 @@ const SearchBar = () => {
   }
   return (
     <> 
-    <h4 className="text-center">Search</h4>
+    <h4 className="text-center fw-bold">Search</h4>
       <form
         className="d-flex flex-column"
         role="search"

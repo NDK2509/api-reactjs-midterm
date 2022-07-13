@@ -31,12 +31,12 @@ const FoodList = () => {
   return (
     <>
       <div className="text-start"></div>
-      <table className="table container">
+      <table className="table table-bordered">
         <thead>
-          <tr>
+          <tr className="table-warning" style={{fontSize: "1.3rem"}}>
             <th scope="col">Id</th>
             <th scope="col">Name</th>
-            <th scope="col">Price</th>
+            <th scope="col">Price (đ)</th>
             <th scope="col">Image</th>
             <th scope="col">Description</th>
             <th scope="col">Ingedients</th>
@@ -44,14 +44,14 @@ const FoodList = () => {
         </thead>
         <tbody>
           {data.count ? (
-            data.cateList.map((cate) => (
+            data.cateList.map((cate, index) => (
               <>
-                <tr className="text-center display-6">
+                <tr className="text-center display-6 table-dark" key={'c' + index}>
                   <td colSpan={5}>{cate.name}</td>
                   <td>{cate.foodList.count} food(s)</td>
                 </tr>
-                {cate.foodList.data.map((food) => (
-                  <tr>
+                {cate.foodList.data.map((food, index) => (
+                  <tr key={index}>
                     <td>{food.id}</td>
                     <td>
                       {food.name}
